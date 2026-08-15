@@ -8,6 +8,18 @@
     catch { return fallback; }
   };
 
+  function injectStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+      .barrel-assignment{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:10px;margin-top:12px;padding:12px;border:1px solid #cfe3d7;background:#f7fbf8;border-radius:13px}
+      .barrel-assignment .btn{white-space:nowrap}
+      .required-mark{display:inline-block;margin-right:5px;padding:2px 6px;border-radius:999px;background:#fff0f0;color:#a12626;font-size:9px;font-weight:900}
+      .barrel-assignment select{background:#fff}
+      @media(max-width:760px){.barrel-assignment{grid-template-columns:1fr}.barrel-assignment .btn{width:100%}}
+    `;
+    document.head.appendChild(style);
+  }
+
   function normalizeQuotes() {
     const quotes = read(QUOTES_KEY, []);
     let changed = false;
@@ -80,6 +92,7 @@
   }
 
   function init() {
+    injectStyles();
     normalizeQuotes();
     $('createAndAssignBarrelBtn')?.addEventListener('click', createAndAssignBarrel);
     $('defaultBarrelId')?.addEventListener('change', forceProductsToRequestBarrel);
