@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0f5132" />
+  <title>حصة البرميل — عروض الشحن</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">تجربة أولى — السعودية ← ود مدني</p>
+        <h1>حصة البرميل</h1>
+        <p class="subtitle">أدخل طلب العميل، احسب الجدوى، وانسخ رسالة واتساب جاهزة.</p>
+      </div>
+      <div class="top-actions">
+        <button class="btn secondary" id="importBtn">استيراد Excel</button>
+        <button class="btn primary" id="exportBtn">تصدير Excel</button>
+        <input id="excelFile" type="file" accept=".xlsx,.xls" hidden />
+      </div>
+    </header>
+
+    <section class="kpis" aria-label="ملخص التشغيل">
+      <article><span>الحصص النشطة</span><strong id="activeSharesKpi">0</strong></article>
+      <article><span>البراميل المطلوبة</span><strong id="barrelsNeededKpi">0</strong></article>
+      <article><span>العروض المحفوظة</span><strong id="quotesKpi">0</strong></article>
+      <article><span>سعر الحصة الحالي</span><strong id="sharePriceKpi">225 ر.س</strong></article>
+    </section>
+
+    <div class="layout">
+      <main class="main-column">
+        <section class="panel">
+          <div class="section-head">
+            <div>
+              <span class="step">1</span>
+              <h2>بيانات العميل</h2>
+            </div>
+            <button class="text-btn" id="newQuoteBtn">+ عرض جديد</button>
+          </div>
+
+          <div class="form-grid two">
+            <label>اسم العميل<input id="customerName" placeholder="مثال: محمد أحمد" /></label>
+            <label>رقم واتساب<input id="customerPhone" inputmode="tel" placeholder="249... أو 966..." /></label>
+            <label>اسم المستلم في مدني<input id="recipientName" placeholder="اختياري في مرحلة المقارنة" /></label>
+            <label>رقم المستلم<input id="recipientPhone" inputmode="tel" placeholder="اختياري" /></label>
+          </div>
+
+          <div class="form-grid three compact-top">
+            <label>عدد الحصص
+              <input id="customerShares" type="number" min="1" step="1" value="1" inputmode="numeric" />
+              <small class="field-hint" id="customerSharesHint">يمكن للعميل حجز أي عدد من الحصص.</small>
+            </label>
+            <label>حالة العرض
+              <select id="quoteStatus">
+                <option value="جديد">جديد</option>
+                <option value="مؤكد">مؤكد</option>
+                <option value="مدفوع">مدفوع</option>
+                <option value="ملغي">ملغي</option>
+              </select>
+            </label>
+            <label>الاستلام<input id="pickupPoint" value="ود مدني — نقطة استلام واحدة" /></label>
+          </div>
+          <label class="compact-top">ملاحظة داخلية<input id="customerNote" placeholder="مثال: مشروع حلويات — مهتم بالحليب والكاكاو" /></label>
+        </section>
+
+        <section class="panel">
+          <div class="section-head">
+            <div><span class="step">2</span><h2>المنتجات</h2></div>
+            <span class="hint">حتى 3 منتجات في العرض</span>
+          </div>
+          <div id="productsContainer" class="products"></div>
+          <button class="btn secondary full-mobile" id="addProductBtn">+ إضافة منتج</button>
+        </section>
+
+        <section class="panel">
+          <div class="section-head">
+            <div><span class="step">3</span><h2>السعة والجدوى</h2></div>
+          </div>
+
+          <div class="capacity-grid">
+            <div class="capacity-card">
+              <div class="capacity-title"><span>الوزن</span><strong id="weightLabel">0 / 37.5 كجم</strong></div>
+              <div class="progress"><div id="weightBar"></div></div>
+            </div>
+            <div class="capacity-card">
+              <div class="capacity-title"><span>الحجم</span><strong id="volumeLabel">0 / 75 لتر</strong></div>
+              <div class="progress"><div id="volumeBar"></div></div>
+            </div>
+          </div>
+
+          <div class="result-grid">
+            <article><span>قيمة المنتجات</span><strong id="productsTotalSar">0 ر.س</strong></article>
+            <article><span>رسوم الحصص</span><strong id="shippingTotalSar">0 ر.س</strong></article>
+            <article><span>التكلفة واصل مدني</span><strong id="landedTotalSdg">0 ج.س</strong></article>
+            <article><span>سعر نفس الكمية بالسودان</span><strong id="sudanTotalSdg">0 ج.س</strong></article>
+          </div>
+
+          <div class="decision neutral" id="decisionBox">أدخل سعر السعودية وسعر السودان للمنتجات.</div>
+          <p class="microcopy" id="decisionDetails"></p>
+        </section>
+
+        <section class="panel settings-panel">
+          <details>
+            <summary>إعدادات البرميل والحساب</summary>
+            <p class="hint">هذه القيم تُحفظ على جهازك ويمكن تعديلها عندما ترد شركة الشحن بالسياسات النهائية.</p>
+            <div class="form-grid three">
+              <label>شحن البرميل (ر.س)<input id="shippingCost" type="number" min="0" step="1" value="500" /></label>
+              <label>بيع البرميل المتوقع (ر.س)<input id="barrelResale" type="number" min="0" step="1" value="100" /></label>
+              <label>هامش أمان (ر.س)<input id="safetyBuffer" type="number" min="0" step="1" value="50" /></label>
+              <label>عدد الحصص في البرميل<input id="sharesPerBarrel" type="number" min="1" step="1" value="2" /></label>
+              <label>سعر الحصة (ر.س)<input id="sharePrice" type="number" min="0" step="0.01" value="225" /></label>
+              <label>1 ريال = ج.س<input id="sarToSdg" type="number" min="1" step="1" value="1520" /></label>
+              <label>وزن البرميل الأقصى<input id="barrelWeight" type="number" min="1" step="0.1" value="100" /></label>
+              <label>حجم البرميل (لتر)<input id="barrelVolume" type="number" min="1" step="1" value="220" /></label>
+              <label>أقل توفير مقبول %<input id="minSaving" type="number" min="0" max="100" step="1" value="15" /></label>
+              <label>وزنك الخاص (كجم)<input id="ownerWeight" type="number" min="0" step="0.1" value="20" /></label>
+              <label>حجمك الخاص (لتر)<input id="ownerVolume" type="number" min="0" step="1" value="50" /></label>
+              <label>احتياط الوزن (كجم)<input id="reserveWeight" type="number" min="0" step="0.1" value="5" /></label>
+              <label>احتياط الحجم (لتر)<input id="reserveVolume" type="number" min="0" step="1" value="20" /></label>
+            </div>
+            <label class="toggle-row compact-top">
+              <input id="autoSharePrice" type="checkbox" checked />
+              <span><strong>تحديث سعر الحصة تلقائيًا</strong><small>يتغير السعر عند تغيير تكلفة الشحن أو بيع البرميل أو هامش الأمان أو عدد الحصص.</small></span>
+            </label>
+            <div class="settings-summary" id="settingsSummary"></div>
+            <button class="btn secondary compact-top" id="applySuggestedPriceBtn">استخدم سعر الحصة المقترح الآن</button>
+          </details>
+        </section>
+      </main>
+
+      <aside class="side-column">
+        <section class="panel sticky whatsapp-panel">
+          <div class="section-head"><div><span class="step">4</span><h2>رسالة واتساب</h2></div></div>
+          <textarea id="whatsappMessage" readonly></textarea>
+          <div class="button-stack">
+            <button class="btn primary" id="copyMessageBtn">نسخ الرسالة</button>
+            <button class="btn whatsapp" id="openWhatsappBtn">فتح واتساب</button>
+            <button class="btn secondary" id="saveQuoteBtn">حفظ العرض</button>
+          </div>
+          <p class="microcopy">الحساب تقديري حتى تثبيت شروط شركة الشحن والأسعار الفعلية وقت الشراء.</p>
+        </section>
+      </aside>
+    </div>
+
+    <section class="panel history-panel">
+      <div class="section-head">
+        <div><h2>سجل العروض</h2><p class="hint">افتح أي عرض سابق وعدله بدل إعادة الإدخال.</p></div>
+        <input id="historySearch" class="search" placeholder="ابحث باسم العميل أو المنتج..." />
+      </div>
+      <div id="historyContainer" class="history-list"></div>
+    </section>
+
+    <footer>
+      <strong>حصة البرميل</strong> — الديمو يحفظ بيانات التشغيل محليًا في المتصفح. استخدم تصدير Excel كنسخة سجل واحتياط.
+    </footer>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
