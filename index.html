@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#0f5132" />
-  <title>حصة البرميل — إدارة العروض</title>
+  <title>حصة البرميل — إدارة العروض والبراميل</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -13,7 +13,7 @@
       <div>
         <p class="eyebrow">السعودية ← ود مدني</p>
         <h1>حصة البرميل</h1>
-        <p class="subtitle">أدخل أقل قدر من البيانات، واحصل على قرار ورسالة واتساب جاهزة.</p>
+        <p class="subtitle">تسعير الطلبات، توزيعها على البراميل، ومتابعة كل برميل برقم مميز.</p>
       </div>
       <button class="btn ghost compact" id="newQuoteBtn">+ طلب جديد</button>
     </header>
@@ -21,7 +21,8 @@
     <nav class="tabs" aria-label="أقسام التطبيق">
       <button class="tab active" data-tab="order"><span>1</span> الطلب</button>
       <button class="tab" data-tab="result"><span>2</span> النتيجة</button>
-      <button class="tab" data-tab="history"><span>3</span> السجل</button>
+      <button class="tab" data-tab="barrels"><span>3</span> البراميل</button>
+      <button class="tab" data-tab="history"><span>4</span> السجل</button>
       <button class="tab" data-tab="settings"><span>⚙</span> الإعدادات</button>
     </nav>
 
@@ -30,71 +31,45 @@
         <div class="content-narrow">
           <section class="panel">
             <div class="section-head">
-              <div>
-                <h2>بيانات العميل</h2>
-                <p class="hint">يكفي الاسم والواتساب في مرحلة التسعير.</p>
-              </div>
+              <div><h2>بيانات العميل</h2><p class="hint">يكفي الاسم والواتساب في مرحلة التسعير.</p></div>
               <select id="quoteStatus" class="status-select" aria-label="حالة العرض">
-                <option value="جديد">جديد</option>
-                <option value="مؤكد">مؤكد</option>
-                <option value="مدفوع">مدفوع</option>
-                <option value="ملغي">ملغي</option>
+                <option value="جديد">جديد</option><option value="مؤكد">مؤكد</option><option value="مدفوع">مدفوع</option><option value="ملغي">ملغي</option>
               </select>
             </div>
-
             <div class="form-grid two">
-              <label>اسم العميل
-                <input id="customerName" autocomplete="name" placeholder="مثال: محمد أحمد" />
-              </label>
-              <label>رقم واتساب
-                <input id="customerPhone" inputmode="tel" autocomplete="tel" placeholder="249... أو 966..." />
-              </label>
+              <label>اسم العميل<input id="customerName" autocomplete="name" placeholder="مثال: محمد أحمد" /></label>
+              <label>رقم واتساب<input id="customerPhone" inputmode="tel" autocomplete="tel" placeholder="249... أو 966..." /></label>
               <label>عدد الحصص
-                <select id="customerSharesSelect">
-                  <option value="1">حصة واحدة</option>
-                  <option value="2">حصتان</option>
-                  <option value="3">3 حصص</option>
-                  <option value="4">4 حصص</option>
-                  <option value="5">5 حصص</option>
-                  <option value="other">أخرى…</option>
-                </select>
-                <input id="customerShares" class="conditional" type="number" min="1" step="1" value="1" inputmode="numeric" aria-label="عدد الحصص اليدوي" />
+                <select id="customerSharesSelect"><option value="1">حصة واحدة</option><option value="2">حصتان</option><option value="3">3 حصص</option><option value="4">4 حصص</option><option value="5">5 حصص</option><option value="other">أخرى…</option></select>
+                <input id="customerShares" class="conditional" type="number" min="1" step="1" value="1" inputmode="numeric" />
                 <small id="customerSharesHint" class="field-hint"></small>
               </label>
               <label>نقطة الاستلام
-                <select id="pickupPointSelect">
-                  <option value="ود مدني — نقطة استلام واحدة">ود مدني — نقطة الاستلام</option>
-                  <option value="other">أخرى…</option>
-                </select>
+                <select id="pickupPointSelect"><option value="ود مدني — نقطة استلام واحدة">ود مدني — نقطة الاستلام</option><option value="other">أخرى…</option></select>
                 <input id="pickupPoint" class="conditional" value="ود مدني — نقطة استلام واحدة" placeholder="اكتب نقطة الاستلام" />
               </label>
             </div>
-
             <details class="optional-block">
-              <summary>بيانات الاستلام والملاحظات <span>اختياري الآن</span></summary>
+              <summary>بيانات التشغيل والاستلام <span>اختياري الآن</span></summary>
               <div class="form-grid two details-body">
+                <label>البرميل الافتراضي<select id="defaultBarrelId"></select><small class="field-hint">المنتجات الجديدة ستتبع هذا البرميل تلقائيًا، ويمكن تغيير كل منتج منفصلًا.</small></label>
                 <label>اسم المستلم في مدني<input id="recipientName" /></label>
                 <label>رقم المستلم<input id="recipientPhone" inputmode="tel" /></label>
-                <label class="span-two">ملاحظة داخلية<input id="customerNote" placeholder="مثال: يريد المقارنة قبل الدفع" /></label>
+                <label>ملاحظة داخلية<input id="customerNote" placeholder="مثال: يريد المقارنة قبل الدفع" /></label>
               </div>
             </details>
           </section>
 
           <section class="panel">
             <div class="section-head">
-              <div>
-                <h2>المنتجات</h2>
-                <p class="hint">أضف العدد الذي تحتاجه. لا يوجد حد أقصى.</p>
-              </div>
+              <div><h2>المنتجات</h2><p class="hint">أضف العدد الذي تحتاجه. لتقسيم نفس المنتج بين برميلين، أضفه كسطرين.</p></div>
               <span class="counter" id="productsCount">1 منتج</span>
             </div>
             <div id="productsContainer" class="products"></div>
             <button class="btn secondary add-product" id="addProductBtn">+ إضافة منتج آخر</button>
           </section>
 
-          <div class="next-action">
-            <button class="btn primary wide" id="goResultBtn">احسب واعرض النتيجة ←</button>
-          </div>
+          <div class="next-action"><button class="btn primary wide" id="goResultBtn">احسب واعرض النتيجة ←</button></div>
         </div>
       </section>
 
@@ -103,12 +78,22 @@
           <section class="panel result-hero">
             <div class="decision neutral" id="decisionBox">أدخل أسعار المنتجات أولًا.</div>
             <p class="decision-details" id="decisionDetails"></p>
-
             <div class="summary-grid">
-              <article><span>المنتجات</span><strong id="productsTotalSar">0 ر.س</strong></article>
-              <article><span>الحصص</span><strong id="shippingTotalSar">0 ر.س</strong></article>
-              <article class="accent"><span>واصل مدني</span><strong id="landedTotalSdg">0 ج.س</strong></article>
-              <article><span>في السودان</span><strong id="sudanTotalSdg">0 ج.س</strong></article>
+              <article><span>تكلفة المنتجات</span><strong id="productsTotalSar">0 ر.س</strong></article>
+              <article><span>تكلفة الحصص</span><strong id="shippingTotalSar">0 ر.س</strong></article>
+              <article><span>التكلفة عليك</span><strong id="costTotalSar">0 ر.س</strong></article>
+              <article><span>سعر السوق بالسودان</span><strong id="sudanTotalSdg">0 ج.س</strong></article>
+            </div>
+
+            <div class="offer-box">
+              <div class="offer-head"><div><h3>سعر العرض للعميل</h3><p class="hint">تحكم في السعر النهائي بدل إجبارك على السعر المحسوب.</p></div><strong id="offerPriceSummary">0 ر.س</strong></div>
+              <div class="form-grid two">
+                <label>طريقة التسعير
+                  <select id="offerMode"><option value="auto">تلقائي = التكلفة الحالية</option><option value="manual">سعر يدوي</option></select>
+                </label>
+                <label id="manualOfferWrap" class="conditional-wrap">السعر اليدوي (ر.س)<input id="manualOfferPrice" type="number" min="0" step="0.01" inputmode="decimal" /></label>
+              </div>
+              <div class="offer-metrics"><span>واصل مدني: <strong id="landedTotalSdg">0 ج.س</strong></span><span>هامشك: <strong id="offerMarginSar">0 ر.س</strong></span></div>
             </div>
 
             <div class="capacity-inline">
@@ -118,20 +103,20 @@
           </section>
 
           <section class="panel whatsapp-card">
-            <div class="section-head">
-              <div>
-                <h2>رسالة واتساب</h2>
-                <p class="hint">جاهزة للإرسال، وتشمل روابط المنتجات إن وجدت.</p>
-              </div>
-              <button class="btn ghost compact" id="editOrderBtn">تعديل الطلب</button>
-            </div>
+            <div class="section-head"><div><h2>رسالة واتساب</h2><p class="hint">جاهزة للإرسال وتشمل السعر الذي اخترته.</p></div><button class="btn ghost compact" id="editOrderBtn">تعديل الطلب</button></div>
             <textarea id="whatsappMessage" readonly></textarea>
-            <div class="action-grid">
-              <button class="btn primary" id="copyMessageBtn">نسخ الرسالة</button>
-              <button class="btn whatsapp" id="openWhatsappBtn">فتح واتساب</button>
-              <button class="btn secondary" id="saveQuoteBtn">حفظ العرض</button>
-            </div>
+            <div class="action-grid"><button class="btn primary" id="copyMessageBtn">نسخ الرسالة</button><button class="btn whatsapp" id="openWhatsappBtn">فتح واتساب</button><button class="btn secondary" id="saveQuoteBtn">حفظ العرض</button></div>
           </section>
+        </div>
+      </section>
+
+      <section class="tab-panel" id="tab-barrels">
+        <div class="content-wide">
+          <section class="barrels-toolbar panel compact-panel">
+            <div><h2>البراميل</h2><p class="hint">كل برميل له رقم مميز ويعرض المشتركين والمنتجات الموجودة داخله.</p></div>
+            <button class="btn primary" id="createBarrelBtn">+ إنشاء برميل</button>
+          </section>
+          <div id="barrelsContainer" class="barrels-list"></div>
         </div>
       </section>
 
@@ -144,10 +129,7 @@
             <article><span>سعر الحصة</span><strong id="sharePriceKpi">0 ر.س</strong></article>
           </section>
           <section class="panel history-panel">
-            <div class="section-head history-head">
-              <div><h2>سجل العروض</h2><p class="hint">افتح العميل وعدّل الطلب بدل إعادة الإدخال.</p></div>
-              <input id="historySearch" class="search" placeholder="ابحث بالاسم أو الرقم أو المنتج…" />
-            </div>
+            <div class="section-head history-head"><div><h2>سجل العروض</h2><p class="hint">افتح العميل وعدّل الطلب بدل إعادة الإدخال.</p></div><input id="historySearch" class="search" placeholder="ابحث بالاسم أو الرقم أو المنتج…" /></div>
             <div id="historyContainer" class="history-list"></div>
           </section>
         </div>
@@ -156,38 +138,21 @@
       <section class="tab-panel" id="tab-settings">
         <div class="content-narrow">
           <section class="panel settings-panel">
-            <div class="section-head">
-              <div><h2>إعدادات التشغيل</h2><p class="hint">تعدلها عند تغير سعر الشحن أو الصرف. ليست جزءًا من إدخال كل عميل.</p></div>
-            </div>
-
+            <div class="section-head"><div><h2>إعدادات التشغيل</h2><p class="hint">تعدلها عند تغير سعر الشحن أو الصرف.</p></div></div>
             <div class="settings-group">
               <h3>السعر والحصص</h3>
               <div class="form-grid two">
                 <label>شحن البرميل (ر.س)<input id="shippingCost" type="number" min="0" step="1" value="500" /></label>
                 <label>بيع البرميل المتوقع (ر.س)<input id="barrelResale" type="number" min="0" step="1" value="100" /></label>
                 <label>هامش الأمان (ر.س)<input id="safetyBuffer" type="number" min="0" step="1" value="50" /></label>
-                <label>تقسيم البرميل
-                  <select id="sharesPerBarrelSelect">
-                    <option value="2">حصتان</option><option value="3">3 حصص</option><option value="4">4 حصص</option><option value="5">5 حصص</option><option value="6">6 حصص</option><option value="other">أخرى…</option>
-                  </select>
-                  <input id="sharesPerBarrel" class="conditional" type="number" min="1" step="1" value="2" />
-                </label>
+                <label>تقسيم البرميل<select id="sharesPerBarrelSelect"><option value="2">حصتان</option><option value="3">3 حصص</option><option value="4">4 حصص</option><option value="5">5 حصص</option><option value="6">6 حصص</option><option value="other">أخرى…</option></select><input id="sharesPerBarrel" class="conditional" type="number" min="1" step="1" value="2" /></label>
                 <label>سعر الحصة (ر.س)<input id="sharePrice" type="number" min="0" step="0.01" value="225" /></label>
                 <label>1 ريال = ج.س<input id="sarToSdg" type="number" min="1" step="1" value="1520" /></label>
-                <label>أقل توفير مقبول
-                  <select id="minSavingSelect">
-                    <option value="10">10%</option><option value="15" selected>15%</option><option value="20">20%</option><option value="25">25%</option><option value="other">أخرى…</option>
-                  </select>
-                  <input id="minSaving" class="conditional" type="number" min="0" max="100" step="1" value="15" />
-                </label>
+                <label>أقل توفير مقبول<select id="minSavingSelect"><option value="10">10%</option><option value="15" selected>15%</option><option value="20">20%</option><option value="25">25%</option><option value="other">أخرى…</option></select><input id="minSaving" class="conditional" type="number" min="0" max="100" step="1" value="15" /></label>
               </div>
-              <label class="toggle-row">
-                <input id="autoSharePrice" type="checkbox" checked />
-                <span><strong>حساب سعر الحصة تلقائيًا</strong><small>حسب الشحن وبيع البرميل وهامش الأمان وعدد الحصص.</small></span>
-              </label>
+              <label class="toggle-row"><input id="autoSharePrice" type="checkbox" checked /><span><strong>حساب سعر الحصة تلقائيًا</strong><small>حسب الشحن وبيع البرميل وهامش الأمان وعدد الحصص.</small></span></label>
               <div class="settings-summary" id="settingsSummary"></div>
             </div>
-
             <details class="optional-block advanced-settings">
               <summary>إعدادات السعة المتقدمة <span>نادراً ما تتغير</span></summary>
               <div class="form-grid two details-body">
@@ -199,15 +164,7 @@
                 <label>احتياط التغليف — حجم<input id="reserveVolume" type="number" min="0" step="1" value="20" /></label>
               </div>
             </details>
-
-            <div class="data-actions">
-              <div><strong>ملف Excel</strong><p class="hint">نسخة احتياطية ونقل البيانات بين الأجهزة.</p></div>
-              <div class="data-buttons">
-                <button class="btn secondary" id="importBtn">استيراد Excel</button>
-                <button class="btn primary" id="exportBtn">تصدير Excel</button>
-                <input id="excelFile" type="file" accept=".xlsx,.xls" hidden />
-              </div>
-            </div>
+            <div class="data-actions"><div><strong>ملف Excel</strong><p class="hint">نسخة احتياطية ونقل البيانات بين الأجهزة.</p></div><div class="data-buttons"><button class="btn secondary" id="importBtn">استيراد Excel</button><button class="btn primary" id="exportBtn">تصدير Excel</button><input id="excelFile" type="file" accept=".xlsx,.xls" hidden /></div></div>
           </section>
         </div>
       </section>
