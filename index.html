@@ -49,20 +49,28 @@
                 <input id="pickupPoint" class="conditional" value="ود مدني — نقطة استلام واحدة" placeholder="اكتب نقطة الاستلام" />
               </label>
             </div>
+
+            <div class="barrel-assignment">
+              <label>البرميل المرتبط بالطلب <span class="required-mark">مطلوب</span>
+                <select id="defaultBarrelId"></select>
+                <small class="field-hint">كل منتجات هذا الطلب تُسجل تلقائيًا داخل البرميل المختار.</small>
+              </label>
+              <button class="btn secondary" id="createAndAssignBarrelBtn" type="button">+ إنشاء برميل وربطه</button>
+            </div>
+
             <details class="optional-block">
-              <summary>بيانات التشغيل والاستلام <span>اختياري الآن</span></summary>
+              <summary>بيانات الاستلام والملاحظات <span>اختياري الآن</span></summary>
               <div class="form-grid two details-body">
-                <label>البرميل الافتراضي<select id="defaultBarrelId"></select><small class="field-hint">المنتجات الجديدة ستتبع هذا البرميل تلقائيًا، ويمكن تغيير كل منتج منفصلًا.</small></label>
                 <label>اسم المستلم في مدني<input id="recipientName" /></label>
                 <label>رقم المستلم<input id="recipientPhone" inputmode="tel" /></label>
-                <label>ملاحظة داخلية<input id="customerNote" placeholder="مثال: يريد المقارنة قبل الدفع" /></label>
+                <label class="span-two">ملاحظة داخلية<input id="customerNote" placeholder="مثال: يريد المقارنة قبل الدفع" /></label>
               </div>
             </details>
           </section>
 
           <section class="panel">
             <div class="section-head">
-              <div><h2>المنتجات</h2><p class="hint">أضف العدد الذي تحتاجه. لتقسيم نفس المنتج بين برميلين، أضفه كسطرين.</p></div>
+              <div><h2>المنتجات</h2><p class="hint">أضف العدد الذي تحتاجه. جميع منتجات الطلب تتبع نفس البرميل المختار أعلاه.</p></div>
               <span class="counter" id="productsCount">1 منتج</span>
             </div>
             <div id="productsContainer" class="products"></div>
@@ -175,6 +183,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="main.js"></script>
+  <script src="request-barrel.js"></script>
   <script src="excel-import.js"></script>
 </body>
 </html>
